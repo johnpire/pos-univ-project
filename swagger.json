@@ -5,7 +5,7 @@
     "description": "API documentation for the POS Univ Project, providing endpoints for user authentication, test management, and more.",
     "version": "1.0.0"
   },
-  "host": "https://pos-univ-project.onrender.com",
+  "host": "pos-univ-project.onrender.com",
   "basePath": "/",
   "schemes": [
     "https"
