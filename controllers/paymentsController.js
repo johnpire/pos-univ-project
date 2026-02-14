@@ -5,13 +5,27 @@ const mongodb = require('../data/database');
 const createPayment = async (req, res) => {
     //#swagger.tags = ['Payments']
     try {
-        const { orderId, amount, currency, method, paymentDetails } = req.body;
-        
+        const { orderId, method, paymentDetails } = req.body;
+
+        // Get order and validate
+        const ordersCollection = mongodb.getDatabase().db().collection('orders');
+        const order = await ordersCollection.findOne({ _id: new ObjectId(orderId) });
+
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        // Check if order already has payment
+        if (order.paymentId) {
+            return res.status(400).json({ error: 'Order already has a payment' });
+        }
+
+        // Create payment with order's total amount
         const paymentsCollection = mongodb.getDatabase().db().collection('payments');
         const newPayment = {
             orderId: new ObjectId(orderId),
-            amount: parseFloat(amount),
-            currency: currency || 'USD',
+            amount: parseFloat(order.totalAmount),
+            currency: order.currency || 'USD',
             method: method,
             status: 'completed',
             paymentDetails: paymentDetails || {},
@@ -22,8 +36,7 @@ const createPayment = async (req, res) => {
         
         const result = await paymentsCollection.insertOne(newPayment);
         
-        // Update order with payment reference
-        const ordersCollection = mongodb.getDatabase().db().collection('orders');
+        // Update order with payment reference (use existing ordersCollection)
         await ordersCollection.updateOne(
             { _id: new ObjectId(orderId) },
             { 
