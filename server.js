@@ -98,7 +98,7 @@ app.get('/auth/github/callback',
         // Redirect to index
         res.redirect('/');
     }
-);
+);  
 
 // Routes // ============================================================================
 // Home route - display login status
@@ -106,7 +106,7 @@ app.get('/', (req, res) => {
     if (req.session && req.session.user) {
         res.send(`Logged in as ${req.session.user.username} (${req.session.user.role})`);
     } else {
-        res.send('Not logged in - <a href="/auth/github">Login with GitHub</a>');
+        res.send('Not logged in - <a href="/auth/github">Login with GitHub</a>'); // directly provide the link
     }
 });
 
