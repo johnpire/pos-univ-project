@@ -4,8 +4,9 @@ const accountsController = require('../controllers/accountsController');
 const validateExam = require('../middleware/validateExam');
 
 router.get('/logout', accountsController.logoutUser);
-router.get('/', accountsController.getAllAccounts);
-router.get('/:id', accountsController.getAccountById);
-router.put('/:id', accountsController.updateAccount);
-router.delete('/:id', accountsController.deleteAccount);
+router.get('/', accountsController.getAllUsers);
+router.get('/:id', accountsController.getUserById);
+router.put('/:id', accountsController.updateUser);
+router.delete('/:id', accountsController.deleteUser);
+
 module.exports = router;
