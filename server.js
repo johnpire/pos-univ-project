@@ -80,7 +80,7 @@ passport.deserializeUser(async (id, done) => {
 
 // OAuth Routes // ============================================================================
 // Initiate GitHub OAuth login
-app.get('/auth/github', 
+app.get('/auth/github/callback', 
     passport.authenticate('github', { scope: ['user:email'] })
 );
 
