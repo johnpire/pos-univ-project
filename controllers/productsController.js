@@ -89,6 +89,10 @@ const getProductById = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
         
+        // Fetch category information
+        const categoriesCollection = mongodb.getDatabase().db().collection('categories');
+        const category = await categoriesCollection.findOne({ _id: product.categoryId });
+        
         res.status(200).json({
             ...product,
             category: category ? { name: category.name, slug: category.slug } : null
