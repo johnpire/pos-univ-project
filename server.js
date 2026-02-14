@@ -86,7 +86,7 @@ app.get('/auth/github',
 
 // GitHub OAuth callback
 app.get('/auth/github/callback',
-    passport.authenticate('github', { failureRedirect: '/login' }),
+    passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
         // Set user session
         req.session.user = {
