@@ -10,10 +10,7 @@ const { handleGitHubLogin } = require('./controllers/accountsController');
 
 const port = process.env.PORT || 4000;
 
-// ============================================================================
-// Middleware Configuration
-// ============================================================================
-
+// Middleware Configuration // ============================================================================
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +25,7 @@ app.use(session({
     }
 }));
 
-// Passport initialization
+// Passport initialization 
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -45,10 +42,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
 }));
 
-// ============================================================================
-// Passport & GitHub OAuth Configuration
-// ============================================================================
-
+// Passport & GitHub OAuth Configuration // ============================================================================
 // GitHub OAuth strategy - auto-creates admin account on first login
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
@@ -84,10 +78,7 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-// ============================================================================
-// OAuth Routes
-// ============================================================================
-
+// OAuth Routes // ============================================================================
 // Initiate GitHub OAuth login
 app.get('/auth/github', 
     passport.authenticate('github', { scope: ['user:email'] })
@@ -109,10 +100,7 @@ app.get('/auth/github/callback',
     }
 );
 
-// ============================================================================
-// Routes
-// ============================================================================
-
+// Routes // ============================================================================
 // Home route - display login status
 app.get('/', (req, res) => {
     if (req.session && req.session.user) {
@@ -125,18 +113,12 @@ app.get('/', (req, res) => {
 // Application routes
 app.use('/', require('./routes'));
 
-// ============================================================================
-// Error Handling
-// ============================================================================
-
+// Error Handling // ============================================================================
 process.on('uncaughtException', (err, origin) => {
     console.error(`Caught exception: ${err}\nException origin: ${origin}`);
 });
 
-// ============================================================================
-// Database Connection & Server Initialization
-// ============================================================================
-
+// Database Connection & Server Initialization // ============================================================================
 mongodb.initDB((err) => {
     if (err) {
         console.error('Database connection error:', err);

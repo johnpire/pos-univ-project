@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
 
-
 // LOGIN - Login user (GitHub OAuth only - handled by Passport)
 // This function is called after successful GitHub OAuth
 const handleGitHubLogin = async (githubProfile) => {

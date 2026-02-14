@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
 
-
 // CREATE - Create a new order
 const createOrder = async (req, res) => {
     //#swagger.tags = ['Orders']

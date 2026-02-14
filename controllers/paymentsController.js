@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
 
-
 // CREATE - Process a new payment
 const createPayment = async (req, res) => {
     //#swagger.tags = ['Payments']

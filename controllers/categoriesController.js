@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
 
-
 // CREATE - Add a new category
 const createCategory = async (req, res) => {
     //#swagger.tags = ['Categories']
