@@ -6,7 +6,14 @@ const createProduct = async (req, res) => {
     //#swagger.tags = ['Products']
     try {
         const { name, description, price, categoryId, stock, images, specifications, isActive } = req.body;
-        
+
+        // Validate categoryId if provided
+        if (!ObjectId.isValid(categoryId)) {
+            return res.status(400).json({ 
+                error: 'Invalid categoryId format' 
+            });
+        }
+
         // Create new product document
         const productsCollection = mongodb.getDatabase().db().collection('products');
         const newProduct = {
@@ -41,11 +48,18 @@ const getAllProducts = async (req, res) => {
     //#swagger.tags = ['Products']
     try {
         const productsCollection = mongodb.getDatabase().db().collection('products');
-        
+
         // ADDITION | Filtering system
         const { categoryId, minPrice, maxPrice, isActive } = req.query;
         const filter = {};
-        
+
+        // Validate categoryId if provided
+        if (categoryId && !ObjectId.isValid(categoryId)) {
+            return res.status(400).json({ 
+                error: 'Invalid categoryId format' 
+            });
+        }
+
         // convert categoryId (string) back to ObjectId so it is readable
         if (categoryId) {
             filter.categoryId = new ObjectId(categoryId);
@@ -80,8 +94,14 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
     //#swagger.tags = ['Products']
     try {
+        // Validate productId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         const productId = new ObjectId(req.params.id);
-        
         const productsCollection = mongodb.getDatabase().db().collection('products');
         const product = await productsCollection.findOne({ _id: productId });
         
@@ -108,8 +128,22 @@ const getProductById = async (req, res) => {
 const updateProduct = async (req, res) => {
     //#swagger.tags = ['Products']
     try {
-        const { name, description, price, categoryId, stock, images, specifications, isActive } = req.body;
+        // Validate productId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         const productId = new ObjectId(req.params.id);
+        const { name, description, price, categoryId, stock, images, specifications, isActive } = req.body;
+
+        // Validate categoryId if provided
+        if (categoryId && !ObjectId.isValid(categoryId)) {
+            return res.status(400).json({ 
+                error: 'Invalid categoryId format' 
+            });
+        }
 
         // get all data
         const updateData = {name, description, price,
@@ -147,6 +181,13 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     //#swagger.tags = ['Products']
     try {
+        // Validate productId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         const productId = new ObjectId(req.params.id);
         const productsCollection = mongodb.getDatabase().db().collection('products');
         

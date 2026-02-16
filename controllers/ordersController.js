@@ -13,6 +13,13 @@ const createOrder = async (req, res) => {
         
         // Build order items with product snapshots and validate stock
         for (const item of items) {
+            // Validate productId if provided
+            if (item.productId && !ObjectId.isValid(item.productId)) {
+                return res.status(400).json({ 
+                    error: 'Invalid productId format' 
+                });
+            }
+
             const productId = new ObjectId(item.productId);
             const product = await productsCollection.findOne({ _id: productId });
             
@@ -112,8 +119,14 @@ const getAllOrders = async (req, res) => {
 const getOrderById = async (req, res) => {
     //#swagger.tags = ['Orders']
     try {
+        // Validate orderId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         const orderId = new ObjectId(req.params.id);
-        
         const ordersCollection = mongodb.getDatabase().db().collection('orders');
         const order = await ordersCollection.findOne({ _id: orderId });
         
@@ -143,8 +156,22 @@ const getOrderById = async (req, res) => {
 const updateOrder = async (req, res) => {
     //#swagger.tags = ['Orders']
     try {
+        // Validate orderId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         const orderId = new ObjectId(req.params.id);
         const { status, shippingAddress, paymentId } = req.body;
+
+        // Validate productId if provided
+        if (paymentId && !ObjectId.isValid(paymentId)) {
+            return res.status(400).json({ 
+                error: 'Invalid paymentId format' 
+            });
+        }
         
         const updateData = {
             status,
@@ -179,6 +206,13 @@ const updateOrder = async (req, res) => {
 const deleteOrder = async (req, res) => {
     //#swagger.tags = ['Orders']
     try {
+        // Validate orderId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         const orderId = new ObjectId(req.params.id);
         const ordersCollection = mongodb.getDatabase().db().collection('orders');
         

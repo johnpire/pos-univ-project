@@ -5,7 +5,15 @@ const mongodb = require('../data/database');
 const createCategory = async (req, res) => {
     //#swagger.tags = ['Categories']
     try {
-        const { name, description, parentCategoryId, slug, isActive } = req.body;      
+        const { name, description, parentCategoryId, slug, isActive } = req.body;
+        
+        // Validate parentCategoryId if provided
+        if (parentCategoryId && !ObjectId.isValid(parentCategoryId)) {
+            return res.status(400).json({ 
+                error: 'Invalid parentCategoryId format' 
+            });
+        }
+        
         const categoriesCollection = mongodb.getDatabase().db().collection('categories');
         
         // Create new category document
@@ -55,8 +63,14 @@ const getAllCategories = async (req, res) => {
 const getCategoryById = async (req, res) => {
     //#swagger.tags = ['Categories']
     try {
+        // Validate categoryId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid categoryId format' 
+            });
+        }
+
         const categoryId = new ObjectId(req.params.id);
-        
         const categoriesCollection = mongodb.getDatabase().db().collection('categories');
         const category = await categoriesCollection.findOne({ _id: categoryId });
         
@@ -104,8 +118,22 @@ const getCategoryById = async (req, res) => {
 const updateCategory = async (req, res) => {
     //#swagger.tags = ['Categories']
     try {
-        const { name, description, parentCategoryId, slug, isActive } = req.body;
+        // Validate categoryId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid categoryId format' 
+            });
+        }
+        
         const categoryId = new ObjectId(req.params.id);
+        const { name, description, parentCategoryId, slug, isActive } = req.body;
+
+        // Validate parentCategoryId if provided
+        if (parentCategoryId && !ObjectId.isValid(parentCategoryId)) {
+            return res.status(400).json({ 
+                error: 'Invalid parentCategoryId format' 
+            });
+        }
         
         const updateData = {
             name,
@@ -143,6 +171,13 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
     //#swagger.tags = ['Categories']
     try {
+        // Validate categoryId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid categoryId format' 
+            });
+        }
+
         const categoryId = new ObjectId(req.params.id);
         const categoriesCollection = mongodb.getDatabase().db().collection('categories');
         

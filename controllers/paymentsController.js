@@ -7,6 +7,13 @@ const createPayment = async (req, res) => {
     try {
         const { orderId, method, paymentDetails } = req.body;
 
+        // Validate orderId if provided
+        if (orderId && !ObjectId.isValid(orderId)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         // Get order and validate
         const ordersCollection = mongodb.getDatabase().db().collection('orders');
         const order = await ordersCollection.findOne({ _id: new ObjectId(orderId) });
@@ -85,8 +92,14 @@ const getAllPayments = async (req, res) => {
 const getPaymentById = async (req, res) => {
     //#swagger.tags = ['Payments']
     try {
+        // Validate paymentId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid paymentId format' 
+            });
+        }
+
         const paymentId = new ObjectId(req.params.id);
-        
         const paymentsCollection = mongodb.getDatabase().db().collection('payments');
         const payment = await paymentsCollection.findOne({ _id: paymentId });
         
@@ -118,6 +131,13 @@ const getPaymentById = async (req, res) => {
 const updatePayment = async (req, res) => {
     //#swagger.tags = ['Payments']
     try {
+        // Validate paymentId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid orderId format' 
+            });
+        }
+
         const { status, paymentDetails } = req.body;
         const paymentId = new ObjectId(req.params.id);
         
@@ -188,6 +208,13 @@ const updatePayment = async (req, res) => {
 const deletePayment = async (req, res) => {
     //#swagger.tags = ['Payments']
     try {
+        // Validate paymentId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid paymentId format' 
+            });
+        }
+
         const paymentId = new ObjectId(req.params.id);
         const paymentsCollection = mongodb.getDatabase().db().collection('payments');
         

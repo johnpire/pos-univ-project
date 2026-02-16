@@ -93,8 +93,14 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
     //#swagger.tags = ['Users']
     try {
+        // Validate userId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid accountId format' 
+            });
+        }
+
         const userId = new ObjectId(req.params.id);
-        
         const usersCollection = mongodb.getDatabase().db().collection('users');
         const user = await usersCollection.findOne({ _id: userId });
         
@@ -114,6 +120,13 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
     //#swagger.tags = ['Users']
     try {
+        // Validate userId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid accountId format' 
+            });
+        }
+
         const { role, profile } = req.body;
         const userId = new ObjectId(req.params.id);
         
@@ -150,6 +163,13 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     //#swagger.tags = ['Users']
     try {
+        // Validate userId if provided
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                error: 'Invalid accountId format' 
+            });
+        }
+
         const userId = new ObjectId(req.params.id);
         const usersCollection = mongodb.getDatabase().db().collection('users');
         
